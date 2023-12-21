@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import Cart from "../Cart";
 import { Icons } from "../Icons";
 import NavItems from "./NavItems";
 import Container from "../Container";
@@ -63,7 +64,9 @@ const Navbar = () => {
                   <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
                 )}
 
-                <div className="ml-4 lg:ml-6 flow-root">Cart</div>
+                <div className="ml-4 lg:ml-6 flow-root">
+                  <Cart />
+                </div>
               </div>
             </div>
           </div>
