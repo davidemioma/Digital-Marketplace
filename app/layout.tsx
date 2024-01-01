@@ -1,5 +1,6 @@
 import "./globals.css";
 import { cn } from "@/lib/utils";
+import { Toaster } from "sonner";
 import type { Metadata } from "next";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/nav/Navbar";
@@ -22,6 +23,8 @@ export default function RootLayout({
       <body
         className={cn("relative h-full font-sans antialiased", font.className)}
       >
+        <Toaster />
+
         <main className="relative min-h-screen flex flex-col">
           <Navbar />
 
