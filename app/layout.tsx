@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/nav/Navbar";
 import { Nunito_Sans } from "next/font/google";
+import Providers from "@/components/providers";
 
 const font = Nunito_Sans({ subsets: ["latin"] });
 
@@ -23,15 +24,17 @@ export default function RootLayout({
       <body
         className={cn("relative h-full font-sans antialiased", font.className)}
       >
-        <Toaster />
+        <Providers>
+          <Toaster />
 
-        <main className="relative min-h-screen flex flex-col">
-          <Navbar />
+          <main className="relative min-h-screen flex flex-col">
+            <Navbar />
 
-          <div className="flex-1 flex-grow">{children}</div>
+            <div className="flex-1 flex-grow">{children}</div>
 
-          <Footer />
-        </main>
+            <Footer />
+          </main>
+        </Providers>
       </body>
     </html>
   );
