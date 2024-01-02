@@ -25,7 +25,7 @@ export default function RootLayout({
         className={cn("relative h-full font-sans antialiased", font.className)}
       >
         <Providers>
-          <Toaster />
+          <Toaster position="top-center" richColors />
 
           <main className="relative min-h-screen flex flex-col">
             <Navbar />

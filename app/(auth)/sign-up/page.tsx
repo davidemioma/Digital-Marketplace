@@ -1,13 +1,16 @@
 "use client";
 
 import Link from "next/link";
+import { ZodError } from "zod";
+import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { trpc } from "@/lib/_trpcClient";
 import { useForm } from "react-hook-form";
-import { ArrowRight } from "lucide-react";
 import { Icons } from "@/components/Icons";
 import { useRouter } from "next/navigation";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { ArrowRight, Loader2 } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
@@ -30,7 +33,32 @@ export default function SignUp() {
     },
   });
 
-  const onSubmit = ({ email, password }: authCredentialValidator) => {};
+  const { mutate, isLoading } = trpc.auth.registerUser.useMutation({
+    onError: (err) => {
+      if (err.data?.code === "CONFLICT") {
+        toast.error("This email is already in use. Sign in instead?");
+
+        return;
+      }
+
+      if (err instanceof ZodError) {
+        toast.error(err.issues[0].message);
+
+        return;
+      }
+
+      toast.error("Something went wrong. Please try again.");
+    },
+    onSuccess: ({ sentToEmail }) => {
+      toast.success(`Verification email sent to ${sentToEmail}.`);
+
+      router.push(`/verify-email?to=${sentToEmail}`);
+    },
+  });
+
+  const onSubmit = ({ email, password }: authCredentialValidator) => {
+    mutate({ email, password });
+  };
 
   return (
     <div className="relative container flex flex-col items-center justify-center pt-32 lg:px-0">
@@ -89,7 +117,10 @@ export default function SignUp() {
               )}
             </div>
 
-            <Button type="submit">Sign up</Button>
+            <Button type="submit">
+              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Sign up
+            </Button>
           </div>
         </form>
       </div>
