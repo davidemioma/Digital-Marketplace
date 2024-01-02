@@ -4,6 +4,7 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { trpc } from "@/lib/_trpcClient";
+import { redirect } from "next/navigation";
 import { buttonVariants } from "./ui/button";
 import { Loader2, XCircle } from "lucide-react";
 
@@ -68,6 +69,8 @@ const VerifyEmail = ({ token }: Props) => {
       </div>
     );
   }
+
+  return redirect("/sign-in");
 };
 
 export default VerifyEmail;

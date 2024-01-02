@@ -79,7 +79,7 @@ export const EmailTemplate = ({
         <Container style={container}>
           <Img
             style={logo}
-            src={`${process.env.NEXT_PUBLIC_SERVER_URL}/hippo-newsletter-sign-up.png`}
+            src={`${process.env.NEXT_PUBLIC_SERVER_URL}/hippo-email-sent.png`}
             width="150"
             height="150"
             alt="DigitalHippo"

@@ -18,7 +18,7 @@ export default function VerifyEmailPage({
             <VerifyEmail token={token} />
           </div>
         ) : (
-          <div className="h-full flex flex-col justify-center gap-1">
+          <div className="h-full flex flex-col justify-center items-center gap-1">
             <div className="relative h-60 w-60 mb-4 text-muted-foreground">
               <Image
                 className="object-cover"
