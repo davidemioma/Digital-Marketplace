@@ -1,13 +1,17 @@
 import React from "react";
-import Link from "next/link";
 import Cart from "../Cart";
+import Link from "next/link";
 import { Icons } from "../Icons";
 import NavItems from "./NavItems";
 import Container from "../Container";
+import { cookies } from "next/headers";
 import { buttonVariants } from "../ui/button";
+import { getServerSideUser } from "@/lib/payload-utils";
 
-const Navbar = () => {
-  const user = null;
+const Navbar = async () => {
+  const nextCookies = cookies();
+
+  const { user } = await getServerSideUser(nextCookies);
 
   return (
     <div className="fixed top-0 inset-x-0 z-50 bg-white h-16 border-b border-gray-200">

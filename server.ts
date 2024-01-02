@@ -2,6 +2,7 @@ import express from "express";
 import { appRouter } from "./app/trpc";
 import { getPayloadClient } from "./get-payload";
 import { nextHandler, nextApp } from "./next-utils";
+import { inferAsyncReturnType } from "@trpc/server";
 import * as trpcExpress from "@trpc/server/adapters/express";
 
 const app = express();
@@ -15,6 +16,8 @@ const createContext = ({
   req,
   res,
 });
+
+export type ExpressContext = inferAsyncReturnType<typeof createContext>;
 
 const start = async () => {
   const payload = await getPayloadClient({

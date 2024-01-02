@@ -28,6 +28,7 @@ export default function RootLayout({
           <Toaster position="top-center" richColors />
 
           <main className="relative min-h-screen flex flex-col">
+            {/* @ts-ignore */}
             <Navbar />
 
             <div className="flex-1 flex-grow">{children}</div>

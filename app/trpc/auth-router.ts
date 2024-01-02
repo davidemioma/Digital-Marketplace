@@ -48,7 +48,7 @@ export const authRouter = router({
       //Get payload CMS client
       const payload = await getPayloadClient();
 
-      //Verify the payload CMS client
+      //Verify the user based on the token
       const isVerified = await payload.verifyEmail({
         collection: "users",
         token,
@@ -59,5 +59,31 @@ export const authRouter = router({
       }
 
       return { success: true };
+    }),
+
+  signIn: publicProcedure
+    .input(authCredentialSchema)
+    .mutation(async ({ ctx, input }) => {
+      const { res } = ctx;
+
+      const { email, password } = input;
+
+      //Get payload CMS client
+      const payload = await getPayloadClient();
+
+      try {
+        await payload.login({
+          collection: "users",
+          data: {
+            email,
+            password,
+          },
+          res,
+        });
+
+        return { success: true };
+      } catch (err) {
+        throw new TRPCError({ code: "UNAUTHORIZED" });
+      }
     }),
 });
