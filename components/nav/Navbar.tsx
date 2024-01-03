@@ -5,6 +5,7 @@ import { Icons } from "../Icons";
 import NavItems from "./NavItems";
 import Container from "../Container";
 import { cookies } from "next/headers";
+import UserAccount from "./UserAccount";
 import { buttonVariants } from "../ui/button";
 import { getServerSideUser } from "@/lib/payload-utils";
 
@@ -48,7 +49,7 @@ const Navbar = async () => {
                 )}
 
                 {user ? (
-                  <div>User Account</div>
+                  <UserAccount user={user} />
                 ) : (
                   <Link
                     href="/sign-up"

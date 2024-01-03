@@ -47,8 +47,6 @@ export default function SignIn() {
     onSuccess: () => {
       toast.success("Signed in successfully");
 
-      router.refresh();
-
       if (origin) {
         router.push(`/${origin}`);
 
@@ -62,6 +60,8 @@ export default function SignIn() {
       }
 
       router.push("/");
+
+      router.refresh();
     },
   });
 

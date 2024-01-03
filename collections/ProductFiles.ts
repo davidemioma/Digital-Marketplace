@@ -1,0 +1,98 @@
+import { User } from "../payload-types";
+import { CollectionConfig, Access } from "payload/types";
+import { BeforeChangeHook } from "payload/dist/collections/config/types";
+
+const addUser: BeforeChangeHook = ({ req, data }) => {
+  const user = req.user as User | null;
+
+  return { ...data, user: user?.id };
+};
+
+const yourOwnAndPurchased: Access = async ({ req }) => {
+  const user = req.user as User | null;
+
+  if (!user) return false;
+
+  if (user?.role === "admin") return true;
+
+  //Get current user owned product
+  const { docs: products } = await req.payload.find({
+    collection: "products",
+    depth: 0,
+    where: {
+      user: {
+        equals: user.id,
+      },
+    },
+  });
+
+  //Get the productfiles from products.
+  const ownProductFilesIds = products.map((prod) => prod.product_files).flat();
+
+  //Get current user bought product
+  const { docs: orders } = await req.payload.find({
+    collection: "orders",
+    depth: 2,
+    where: {
+      user: {
+        equals: user.id,
+      },
+    },
+  });
+
+  // Get the productfiles out of the orders
+  const purchasedProductFilesIds = orders
+    .map((order) => {
+      return order.products.map((product) => {
+        if (typeof product === "string") {
+          return req.payload.logger.error(
+            "Search depth not sufficient to find purchased file IDs"
+          );
+        }
+
+        return typeof product.product_files === "string"
+          ? product.product_files
+          : product.product_files.id;
+      });
+    })
+    .filter(Boolean)
+    .flat();
+
+  return {
+    id: {
+      in: [...ownProductFilesIds, ...purchasedProductFilesIds],
+    },
+  };
+};
+
+export const ProductFiles: CollectionConfig = {
+  slug: "product_files",
+  admin: {
+    hidden: ({ user }) => user.role !== "admin",
+  },
+  hooks: {
+    beforeChange: [addUser],
+  },
+  access: {
+    read: yourOwnAndPurchased,
+    update: ({ req }) => req.user.role === "admin",
+    delete: ({ req }) => req.user.role === "admin",
+  },
+  upload: {
+    staticURL: "/product_files",
+    staticDir: "product_files",
+    mimeTypes: ["image/*", "font/*", "application/postscript"], //application/postscript is for vector files, AI files or UI kits.
+  },
+  fields: [
+    {
+      name: "user",
+      type: "relationship",
+      relationTo: "users",
+      hasMany: false,
+      required: true,
+      admin: {
+        condition: () => false,
+      },
+    },
+  ],
+};
