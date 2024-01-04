@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+  .activeStyles {
+    @apply absolute top-1/2 -translate-y-1/2 z-50 grid place-items-center h-8 w-8 aspect-square bg-white border-2 border-zinc-300 rounded-full opacity-100 hover:scale-105 active:scale-[0.97];
+  }
+
+  .inactiveStyles {
+    @apply hidden text-gray-400;
+  }
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -56,4 +66,17 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.swiper-pagination-bullet {
+  width: 7px !important;
+  height: 7px !important;
+  background: rgba(255, 255, 255, 0.2);
+  scale: 0.9 !important;
+}
+
+.swiper-pagination-bullet-active {
+  color: #fff;
+  background: white !important;
+  scale: 1 !important ;
 }

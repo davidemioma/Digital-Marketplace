@@ -2,6 +2,7 @@ import Link from "next/link";
 import Container from "@/components/Container";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { ArrowDownToLine, CheckCircle, Leaf } from "lucide-react";
+import ProductList from "@/components/product/ProductList";
 
 const perks = [
   {
@@ -48,7 +49,11 @@ export default function Home() {
           </div>
         </div>
 
-        {/* <div>Products</div> */}
+        <ProductList
+          title="Brand New"
+          href="/products"
+          query={{ sort: "desc", limit: 4 }}
+        />
       </Container>
       <section className="bg-gray-50 border-t border-gray-200">
         <Container className="py-20">
