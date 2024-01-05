@@ -65,7 +65,11 @@ const ProductList = ({ title, href, subtitle, query }: Props) => {
 
       <div className="w-full grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-10 sm:gap-x-6 md:gap-y-10 lg:gap-x-8 mt-6">
         {map.map((product, index) => (
-          <ProductItem key={product?.id} product={product} index={index} />
+          <ProductItem
+            key={`${product?.id}-${index}`}
+            product={product}
+            index={index}
+          />
         ))}
       </div>
     </section>
