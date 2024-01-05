@@ -1,5 +1,5 @@
 import React from "react";
-import Cart from "../Cart";
+import Cart from "../cart/Cart";
 import Link from "next/link";
 import { Icons } from "../Icons";
 import NavItems from "./NavItems";

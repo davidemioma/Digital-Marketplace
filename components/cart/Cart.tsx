@@ -3,10 +3,12 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import CartItem from "./CartItem";
+import useCart from "@/hooks/use-cart";
 import { formatPrice } from "@/lib/utils";
-import { Separator } from "./ui/separator";
-import { buttonVariants } from "./ui/button";
-import { ScrollArea } from "./ui/scroll-area";
+import { Separator } from "../ui/separator";
+import { buttonVariants } from "../ui/button";
+import { ScrollArea } from "../ui/scroll-area";
 import { ShoppingCartIcon } from "lucide-react";
 import {
   Sheet,
@@ -18,9 +20,16 @@ import {
 } from "@/components/ui/sheet";
 
 const Cart = () => {
-  const itemCount = 0;
+  const { items } = useCart();
 
   const [isMounted, setIsMounted] = useState(false);
+
+  const fee = 1;
+
+  const cartTotal = items.reduce(
+    (total, { product: { price } }) => total + price,
+    0
+  );
 
   useEffect(() => {
     setIsMounted(true);
@@ -37,19 +46,23 @@ const Cart = () => {
         />
 
         <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">
-          0
+          {isMounted ? items.length : 0}
         </span>
       </SheetTrigger>
 
       <SheetContent className="w-full flex flex-col pr-0 sm:max-w-lg">
         <SheetHeader>
-          <SheetTitle className="py-2.5 pr-6">Cart (0)</SheetTitle>
+          <SheetTitle className="py-2.5 pr-6">Cart ({items.length})</SheetTitle>
         </SheetHeader>
 
-        {itemCount > 0 ? (
+        {items.length > 0 ? (
           <>
             <div className="w-full pr-6">
-              <ScrollArea>Items</ScrollArea>
+              <ScrollArea>
+                {items.map(({ product }) => (
+                  <CartItem key={product.id} item={product} />
+                ))}
+              </ScrollArea>
             </div>
 
             <div className="pr-6 space-y-4">
@@ -65,13 +78,13 @@ const Cart = () => {
                 <div className="flex">
                   <span className="flex-1">Transaction Fee</span>
 
-                  <span>{formatPrice(200)}</span>
+                  <span>{formatPrice(fee)}</span>
                 </div>
 
                 <div className="flex">
                   <span className="flex-1">Total</span>
 
-                  <span>{formatPrice(200)}</span>
+                  <span>{formatPrice(cartTotal + fee)}</span>
                 </div>
               </div>
 
