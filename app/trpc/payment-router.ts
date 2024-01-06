@@ -67,7 +67,7 @@ export const paymentRouter = router({
           success_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/thank-you?orderId=${order.id}`,
           cancel_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/cart`,
           mode: "payment",
-          payment_method_types: ["card", "paypal"],
+          payment_method_types: ["card"],
           line_items,
           metadata: {
             userId: user.id,
@@ -77,8 +77,32 @@ export const paymentRouter = router({
 
         return { url: stripeSession.url };
       } catch (err) {
-        console.log(err);
         return { url: null };
       }
+    }),
+  pollOrderStatus: privateProcedure
+    .input(z.object({ orderId: z.string() }))
+    .query(async ({ input }) => {
+      const { orderId } = input;
+
+      //Get payload CMS client
+      const payload = await getPayloadClient();
+
+      const { docs: orders } = await payload.find({
+        collection: "orders",
+        where: {
+          id: {
+            equals: orderId,
+          },
+        },
+      });
+
+      if (!orders.length) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
+
+      const [order] = orders;
+
+      return { isPaid: order._isPaid };
     }),
 });
