@@ -1,8 +1,10 @@
+import { parse } from "url";
 import express from "express";
 import bodyParser from "body-parser";
 import { IncomingMessage } from "http";
 import { appRouter } from "./app/trpc";
 import nextBuild from "next/dist/build";
+import { PayloadRequest } from "payload/types";
 import { getPayloadClient } from "./get-payload";
 import { nextHandler, nextApp } from "./next-utils";
 import { inferAsyncReturnType } from "@trpc/server";
@@ -57,6 +59,25 @@ const start = async () => {
 
     return;
   }
+
+  //This is a middleware to protect the cart page if user is not authenticated.
+  const cartRouter = express.Router();
+
+  cartRouter.use(payload.authenticate);
+
+  cartRouter.get("/", (req, res) => {
+    const request = req as PayloadRequest;
+
+    if (!request.user) return res.redirect("/sign-in?origin=cart");
+
+    const parsedUrl = parse(req.url, true);
+
+    const { query } = parsedUrl;
+
+    return nextApp.render(req, res, "/cart", query);
+  });
+
+  app.use("/cart", cartRouter);
 
   app.use(
     "/api/trpc",
