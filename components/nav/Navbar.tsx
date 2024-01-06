@@ -1,8 +1,9 @@
 import React from "react";
-import Cart from "../cart/Cart";
 import Link from "next/link";
+import Cart from "../cart/Cart";
 import { Icons } from "../Icons";
 import NavItems from "./NavItems";
+import MobileNav from "./MobileNav";
 import Container from "../Container";
 import { cookies } from "next/headers";
 import UserAccount from "./UserAccount";
@@ -19,7 +20,7 @@ const Navbar = async () => {
       <nav className="relative bg-white h-full flex items-center">
         <Container>
           <div className="flex items-center">
-            {/* Mobile Nav */}
+            <MobileNav user={user} />
 
             <div className="ml-4 lg:ml-0">
               <Link href="/">
